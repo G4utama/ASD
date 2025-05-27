@@ -1,0 +1,42 @@
+\section{Introduzione}
+\begin{mdframed}
+    \textbf{Algoritmo:} procedura che descrive tramite passi elementari come risolvere un problema (tramite un modello di computazione).
+\end{mdframed}
+
+\raggedright
+Uno stesso problema può essere risolto da diversi algoritmi. Di ogni algoritmo siamo interessati a conoscere:
+\begin{itemize}
+    \item correttezza
+    \item stabilità
+    \item complessità
+\end{itemize}
+
+\subsection{Induzione}
+L'induzione si struttura con:
+\begin{itemize}
+    \item Un caso base $P(0)$.
+    \item Un'ipotesi induttiva (se vale per $P(n)$ allora vale anche per $P(n+1)$).
+\end{itemize}
+
+Matematicamente parlando significa che:
+\begin{itemize}
+    \item Normalmente ho una formula, per esempio $n=1$.
+    \item Se vale per $n=1$, provo con $n=2$.
+    \item Se funziona anche con $n=2$, vuol dire che per $P(n)$ varrà anche $P(n+1)$ e tutti i successivi.
+\end{itemize}
+
+Si ha anche un'ulteriore variante, l'induzione forte:
+\begin{itemize}
+    \item $U$ contiene $1$ oppure $0$.
+    \item Se $U$ contiene tutti i numeri minori di nallora contiene anche $n$.
+\end{itemize}
+
+La parola "forte" è legata al fatto che questa formulazione richiede delle ipotesi apparentemente più forti e stringenti per inferire che l'insieme $U$ coincida con $N$ per ammettere un numero nell'insieme è richiesto infatti che tutti i precedenti ne faccianogià parte (e non solo il numero precedente).
+
+\subsection{Ricorrenza}
+\begin{mdframed}
+    \textbf{Relazione di ricorrenza} è una formula ricorsiva che esprime il termine $n$-esimo di una successione in relazione ai precedenti.
+    La relazione si dice di ordine $r$ se il termine $n$-esimo è espresso in funzione al più dei termini $(n - 1), \ldots, (n - r)$.
+\end{mdframed}
+
+\newpage
