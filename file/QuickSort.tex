@@ -1,0 +1,60 @@
+\section{Quick Sort}
+L'algoritmo di ordinamento più utilizzato e generalmente più efficiente con $O(n^2)$ come caso pessimo ed $O(n\log n)$ come caso medio e migliore è proprio quicksort.
+Viene definito algoritmo "in-place", cioè un algoritmo che non ha bisogno di spazio extra e produce un output nella stessa memoria che contiene i dati.
+
+Anche questo algoritmo è basato sul paradigma divide-et-impera, infatti, per ordinare $A[p, r]$:
+\begin{itemize}
+    \item Divide:
+    \begin{itemize}
+        \item sceglie un pivot $x$ in $A[p, r]$
+        \item partiziona in $A[p, q-1] \leq x$ e $A[q+1, r] \geq x$
+    \end{itemize}
+    \item Impera:
+    \begin{itemize}
+        \item ricorre su $A[p, q-1]$ e su $A[q+1, r]$
+    \end{itemize}
+\end{itemize}
+
+\subsection{Pseudocodice}
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+QUICKSORT(A,p,r)
+1   q = PARTITION(A,p,r)
+2   QUICKSORT(A,p,q-1)
+3   QUICKSORT(A,q+1,r)
+\end{lstlisting}
+\end{mdframed}
+
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+PARTITION(A,p,r)
+1   x = A[r]
+2   i = p - 1
+3   for j = p to r - 1
+4       if A[j] <= x
+5           i = i + 1
+6           A[i] <-> A[j]
+7   A[i + 1] <-> A[r]
+8   return i + 1
+\end{lstlisting}
+\end{mdframed}
+
+\subsection{Passaggi}
+Per ordinare un array, seguite i passaggi seguenti:
+\begin{enumerate}
+    \item Si sceglie come pivot un qualsiasi valore di indice dell'array.
+    \item Quindi si partiziona l'array in base al pivot.
+    \item Quindi si esegue un Quicksort ricorsivo della partizione di sinistra.
+    \item Successivamente, si esegue un Quicksort ricorsivo della partizione corretta.
+\end{enumerate}
+
+Diamo un'occhiata più da vicino alla partizione di questo algoritmo:
+\begin{enumerate}
+    \item Si sceglie un pivot qualsiasi, ad esempio il valore più alto dell'indice.
+    \item Si prenderanno due variabili per puntare a sinistra e a destra dell'elenco, escludendo il pivot.
+    \item La sinistra punterà all'indice più basso e la destra all'indice più alto.
+    \item Ora si spostano a destra tutti gli elementi maggiori del pivot.
+    \item Quindi si sposteranno tutti gli elementi più piccoli del perno nella partizione di sinistra.
+\end{enumerate}
+
+\newpage
