@@ -1,0 +1,31 @@
+\section{Radix Sort}
+Il Radix Sort è un algoritmo di ordinamento che ordina gli elementi raggruppando prima le singole cifre tutte nella stessa attuale posizione. Quindi, ordina gli elementi in base al loro ordine crescente/decrescente. L'idea è quella di ordinare cifra per cifra con un algoritmo stabile e risolvere i problemi di memoria di Counting Sort.
+
+\subsection{Pseudocodice}
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+Radix-SORT(A,d)
+1   for j = 1 to d
+2       COUNTING-SORT(A,j)
+\end{lstlisting}
+\end{mdframed}
+
+\subsection{Correttezza}
+\paragraph{Invariante:} $A^{j-1}$ ordinato
+\paragraph{Inizializzazione:} $j=1, A^{j-1} = A^0$
+\paragraph{Mantenimento:} $A^{j-1}$ ordinato e rodino rispetto a $j$
+
+\subsection{Complessità}
+\begin{itemize}
+    \item $d$ volte Counting-Sort $\Theta(n+b) \Rightarrow \Theta(d(n+b)) = \Theta(n)$
+    \item $d$ cifre $\Theta(1)$
+    \item $b$ base $\Theta(n)$
+\end{itemize}
+$\begin{rcases}
+    m \text{ bit} \Rightarrow m = O(\log n) \\
+    r \text{ bit per cifra} \Rightarrow r = O(\log_2 n) \\
+    \text{base } 2^r
+\end{rcases}
+\Rightarrow \Theta(\frac{m}{r}(m+2^r)) = \Theta(\frac{m}{\log n}(m+2^{\log n})) = \Theta(\frac{m}{\log n}n) = \Theta(n)$
+
+\newpage
