@@ -28,7 +28,7 @@ DELETE(T,x)
 \end{lstlisting}
 \end{mdframed}
 \begin{mdframed}
-    \begin{lstlisting}[mathescape=true]
+\begin{lstlisting}[mathescape=true]
 SEARCH(k)
 1   return T[k]         $\Theta(1)$
 \end{lstlisting}
@@ -55,3 +55,33 @@ Il principio è il pigeonhole principle, quindi nella tabella hash, ogni valore 
 Il pigeonhole principle è una delle idee più semplici ma più utili della matematica e può aiutarci in questo caso. 
 Una versione di base dice che se ($N+1$) piccioni occupano $N$ buche, allora in qualche buca devono esserci almeno 2 piccioni. 
 Quindi, se 5 piccioni occupano 4 buche, deve esserci una buca con almeno 2 piccioni.
+
+\subsection{Chaining}
+Il Chaining propone come soluzione quella di mettere sulla tabella liste dinamiche di elementi, invece che singoli elementi, in modo che in caso si incorra in una cella già occupata dopo un hashing, l'elemento venga inserito in coda (o in testa) alla lista. Nell'approccio di concatenamento, la tabella hash è una matrice di elenchi collegati, cioè ogni indice ha un proprio elenco collegato.Tutte le coppie chiave-valore mappate allo stesso indice saranno memorizzate nell'elenco collegato di quell'indice.
+
+\begin{center}
+    \begin{tabular}{c}
+        \\ \includegraphics[width=0.7\textwidth]{image/Chaining.png} \\ \\
+    \end{tabular}
+\end{center}
+
+\newpage
+\begin{mdframed}
+\begin{lstlisting}[mathescape=true]
+INSERT(T,x)
+1   T[x.key] = x           $\Theta(1)$
+\end{lstlisting}
+\end{mdframed}
+\begin{mdframed}
+\begin{lstlisting}[mathescape=true]
+DELETE(T,x)
+1   T[h(x.key)] = NULL     $\Theta(1)$
+\end{lstlisting}
+\end{mdframed}
+\begin{mdframed}
+\begin{lstlisting}[mathescape=true]
+SEARCH(k)
+1   return T[h(k)]         $\Theta(n)$
+\end{lstlisting}
+\end{mdframed}
+L'operazione peggiore è quella di ricerca, dove alla peggio la complessità è lineare.
