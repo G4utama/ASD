@@ -33,3 +33,25 @@ SEARCH(k)
 1   return T[k]         $\Theta(1)$
 \end{lstlisting}
 \end{mdframed}
+
+\newpage
+\subsection{Esempio}
+\paragraph{Problema:} consideriamo che la key sia di 8 caratteri (8 bit per rappresentare un carattere). Risulta molto costosa in termini di memoria la tabella hash.
+\paragraph{Obiettivo:} usare quantità di memoria proporzionale al numero di elementi da memorizzare.
+\paragraph{Idea:} creazione di una tabella $T$ di dimensione $m << |U|$
+\begin{equation*}
+    h: U \rightarrow \{0, 1, \dots, m-1\}
+\end{equation*}
+Se $n>m \Rightarrow \exists\; x_1,x_2:h(x_1.key) = h(x_2.key) \Rightarrow$ conflitto \\~\\
+Dove:
+\begin{itemize}
+    \item $n = $ \# elementi memorizzati nella tabella $T$
+    \item $m = $ \# celle
+\end{itemize}
+
+La collisione verifica con $n = $ numero di elementi memorizzati se $m <<|U|$ se $n > m$. \\~\\
+
+Il principio è il pigeonhole principle, quindi nella tabella hash, ogni valore trova una corrispondenza. 
+Il pigeonhole principle è una delle idee più semplici ma più utili della matematica e può aiutarci in questo caso. 
+Una versione di base dice che se ($N+1$) piccioni occupano $N$ buche, allora in qualche buca devono esserci almeno 2 piccioni. 
+Quindi, se 5 piccioni occupano 4 buche, deve esserci una buca con almeno 2 piccioni.
