@@ -85,3 +85,41 @@ SEARCH(k)
 \end{lstlisting}
 \end{mdframed}
 L'operazione peggiore è quella di ricerca, dove alla peggio la complessità è lineare.
+
+\subsection{Caso medio}
+\paragraph{Partenza:}
+\begin{itemize}
+    \item $m =$ \# celle tabella
+    \item $n =$ \# elementi inseriti
+    \item $\alpha = \frac{n}{m}$ che può essere minore, maggiore oppure uguale ad 1
+\end{itemize}
+
+Ogni elemento $x$ in input ha la stessa probabilità di $\frac{1}{m}$ di essere "indirizzato" in una qualunque delle $m$ celle. Esso è indicato come $n_j =$ lunghezza lista in $T[j]$.
+
+\begin{center}
+    \begin{tabular}{c}
+        \\ \includegraphics[width=0.7\textwidth]{image/ChainingCasoBase.png} \\ \\
+    \end{tabular}
+\end{center}
+
+\paragraph{Costo medio di Search:} dato dalla ricerca di una chiave non presente $k$ \\~\\
+$\begin{rcases}
+    \begin{rcases}
+        \text{calcolo } h(k) = j \\
+        \text{accedo alla lista } T[j]
+    \end{rcases}
+    \Rightarrow O(1) \\
+    \text{scorro la lista } T[j] \text{ fino in fondo } (n_j \text{elementi}) \Rightarrow n_j
+\end{rcases} \Rightarrow \Theta(1 + \alpha)$
+
+\paragraph{Ricerca di una chiave:} presente \\~\\
+$\begin{rcases}
+    \begin{rcases}
+        \text{calcolo } h(k) = j \\
+        \text{accedo alla lista } T[j]
+    \end{rcases}
+    \Rightarrow O(1) \\
+    \text{scorro la lista } T[j] \text{ fino in a trovare l'elemento con chiave } k
+\end{rcases} \Rightarrow 1+\frac{n_j}{2} \Rightarrow 1+\frac{\alpha}{2}$ \\~\\
+
+Più precisamente: cerco $x$ con chiave $x.key = k$.
