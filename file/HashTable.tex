@@ -123,3 +123,45 @@ $\begin{rcases}
 \end{rcases} \Rightarrow 1+\frac{n_j}{2} \Rightarrow 1+\frac{\alpha}{2}$ \\~\\
 
 Più precisamente: cerco $x$ con chiave $x.key = k$.
+
+\newpage
+\subsection{Funzioni di Hash}
+Se le chiavi fossero numero reali $k \in [0,1) \Rightarrow h(k)=|mx|$ \\~\\
+L'ipotesi di Hash uniforme semplice dipende dalle probabilità con cui vengono estratti gli elementi da inserire; probabilità che in genere non sono note. Le funzioni hash che descriveremo assumono che le chiavi siano degli interi non negativi.
+
+\paragraph{Metodo della divisione:}\;\\~\\
+$\begin{rcases}
+    U = \{0, 1, \ldots, |U|-1\} \\
+    h(k) \in \{0, 1, \ldots, m-1\} \\
+\end{rcases} \Rightarrow h(k) = k \mod m$ \\~\\
+
+La scelta di $m$ è critica:
+\begin{itemize}
+    \item $m = 2^p$
+    \item $m = 2^p - 1$
+\end{itemize}
+$h(k) = h(k')$ se $k$ si ottiene "permutando" $k'$.
+
+\paragraph{Metodo della moltiplicazione:}
+\begin{itemize}
+    \item se $x \in [0,1) \Rightarrow h(x) = |(mx)|$
+    \item chiave $k \in 0,1,\ldots,|U|-1$
+    \item dato $k$
+    \begin{itemize}
+        \item fisso costante $A \in (0,1) \quad (0<A<1)$
+        \item $k * A = k * A \mod 1$
+    \end{itemize}
+    \item $h(k) = |(m(k*A\mod1))|$
+    \item[] \paragraph{pro:}
+    \begin{itemize}
+        \item $m$ non critico
+        \item $A$ non critico
+    \end{itemize}
+    \item[] \paragraph{contro:}
+    \begin{itemize}
+        \item $m = 2^p$
+        \item $w =$ \# bit particolare
+        \item $A = \frac{q}{2^w} \quad (0<q<2)$
+        \item $m(k * A \mod 1) = m(k \frac{q}{2^w} \mod 1)$
+    \end{itemize}
+\end{itemize}
