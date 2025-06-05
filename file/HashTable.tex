@@ -165,3 +165,56 @@ $h(k) = h(k')$ se $k$ si ottiene "permutando" $k'$.
         \item $m(k * A \mod 1) = m(k \frac{q}{2^w} \mod 1)$
     \end{itemize}
 \end{itemize}
+
+\newpage
+\subsection{Open Addressing}
+\paragraph{Idea:} memorizzo gli elementi dell'insieme dinamico solo nello spazio della tabella.
+\begin{itemize}
+    \item funzione di Hash $h(k,i)$
+    \item $k$ chiave
+    \item $i$ \# tentativo
+\end{itemize}
+La funzione Hash specifica l'ordine degli slot da sondare (provare) per una chiave (per inserire/ricercare/cancellare).
+\begin{itemize}
+    \item provo con $h(k,0)$
+    \item se capito in una cella occupata, provo con $h(k,1)$
+    \item poi con $h(k,2)$ e così via, fino a che non trovo una cella libera
+    \item per esplorare tutta la tabella: $h(k,0), h(k,1), \dots, h(k,m-1) \quad \forall\; k \in U$
+\end{itemize}
+
+\paragraph{Operazioni possibili:}
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+INSERT(T,x)
+1   i = 0
+2   repeat
+3       j = h(x.key,i)
+4       if (T[j] = NULL) or (T[j] = DEL)
+5           T[j] = x
+6           return j
+7       i = i + 1
+8   until i = m
+9   error
+\end{lstlisting}
+\end{mdframed}
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+SEARCH(T,k)
+1   i = 0
+2   repeat
+3       j = h(k,i)
+4       if T[j].key = k
+5           return j
+6       i = i + 1
+7   until (i = m) or (T[j] = NULL)
+8   return NOT FOUND
+\end{lstlisting}
+\end{mdframed}
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+DELETE(T,j)
+1   T[j] = DEL
+\end{lstlisting}
+\end{mdframed}
+
+L'Open Addressing risulta una soluzione inefficiente in caso avvengano molte cancellazioni. Similmente, giusto per citarla, è possibile anche attuare una randomizzazionedell'input, per avere una distribuzione più uniforme delle chiavi nelle liste e non dipendente dall'input. La complessità sarà sempre $\Theta(1+\alpha)$
