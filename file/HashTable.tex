@@ -218,3 +218,38 @@ DELETE(T,j)
 \end{mdframed}
 
 L'Open Addressing risulta una soluzione inefficiente in caso avvengano molte cancellazioni. Similmente, giusto per citarla, è possibile anche attuare una randomizzazionedell'input, per avere una distribuzione più uniforme delle chiavi nelle liste e non dipendente dall'input. La complessità sarà sempre $\Theta(1+\alpha)$
+
+\subsection{Hashing Uniforme}
+Ogni elemento determina con la stessa probabilità una qualunque delle $m!$ sequenze di ispezione. \\~\\
+In questo contesto le funzioni di Hash sono:
+\begin{itemize}
+    \item \textbf{Ispezione Lineare:} fisso $h(k)$ funzione di hash e $h'(k+1) = (h(k) + i) \mod m$
+    \begin{itemize}
+        \item vantaggi: semplice; poche permutazioni  ($m$ dipende solo da $h'(k)$)
+        \item svantaggi: addensamento primario (addensamenti di celle occupate)
+    \end{itemize}
+    \item \textbf{Ispezione Quadratica:}
+    \begin{itemize}
+        \item dato $h(k)$ funzione di hash $h'(k,i) = (h(k) + c_1i + c_2i^2) \mod m$ con $c_1, c_2$ opportune e $c_2 > 0$
+        \item addensamento secondario (addensamento quadratico di celle occupate)
+        \item \# sequenze di ispezione dipende solo da$h(k) \mod m \Rightarrow m$ possibilità
+    \end{itemize}
+    \item \textbf{Doppio Hashing:} siano $h_1(k), h_2(k)$ funzioni di Hash di un solo argomento $\Rightarrow h(k,i) = (h_1(k) + ih_2(k) \mod m)$
+\end{itemize}
+
+\paragraph{Costo} \;\\~\\
+Il costo della funzione \verb|Search| con hashing uniforme è riassunta come: $0 \leq \alpha = \frac{n}{m} \leq 1$
+\begin{itemize}
+    \item Ricerca di una chiave non presente:
+    \begin{itemize}
+        \item $\frac{1}{1-\alpha}$ \quad se $\alpha < 1$
+        \item $m$ \quad se $\alpha = 1$
+    \end{itemize}
+    \item Ricerca di una chiave presente:
+    \begin{itemize}
+        \item $\frac{1}{\alpha} \log(\frac{1}{1-\alpha}) \quad \alpha<1$
+        \item $1 + \log m \quad \alpha=1$
+    \end{itemize}
+\end{itemize}
+
+\newpage
