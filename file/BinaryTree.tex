@@ -1,0 +1,21 @@
+\section{Alberi Binari di Ricerca}
+\paragraph{Albero binario:} struttura di dati ad albero composta da nodi, ognuno dei quali ha al massimo due figli, chiamati nodo destro e nodo sinistro. L'albero inizia con un singolo nodo, noto come radice. \\~\\
+
+Matematicamente:
+\begin{itemize}
+    \item nodi $x$ ed elemento/valore/chiave $x.key$
+    \item operazioni hanno costo $O(h)$ quando non bilanciato, $O(\log(n))$ se bilanciato
+\end{itemize}
+
+\paragraph{Definizione induttiva:}
+\begin{itemize}
+    \item $\varnothing$ è un albero
+    \item se $r$ è un nodo, $T_1$ e $T_2$ alberi $\Rightarrow r(T_1,T_2)$ è un albero
+    \item ogni nodo $x$ ha i seguenti campi:
+    \begin{itemize}
+        \item $x.p$
+        \item $x.key$
+        \item $x.left$
+        \item $x.right$
+    \end{itemize}
+\end{itemize}
