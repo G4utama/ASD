@@ -19,3 +19,33 @@ Matematicamente:
         \item $x.right$
     \end{itemize}
 \end{itemize}
+
+\paragraph{Operazioni possibili:}
+\begin{itemize}
+    \item Visita simmetrica (InOrder)
+    \item Ricerca (Search)
+    \item Ricerca di min e max
+    \item Successore
+    \item Inserimento
+    \item Cancellazione
+\end{itemize}
+
+\subsection{Visita simmetrica (InOrder)}
+Elencare gli elementi del sottoalbero radicato in un nodo $x$ in ordine di chiave crescente.
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+IN-ORDER(x)
+1   if x != NULL
+2       IN-ORDER(x.left)
+3       print(x)
+4       IN-ORDER(x.right)
+\end{lstlisting}
+\end{mdframed}
+La complessità di tale operazione è lineare, dato da una visita di tutto l'albero.
+\begin{equation*}
+    T(n) = \begin{cases}
+        c \qquad(n=0)\\
+        T(k) + T(n-k-1) + d \qquad(n>0, k<n)
+    \end{cases}
+\end{equation*}
+Stima di complessità: $T(n) = (c+d)n + c$
