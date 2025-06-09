@@ -49,3 +49,31 @@ La complessità di tale operazione è lineare, dato da una visita di tutto l'alb
     \end{cases}
 \end{equation*}
 Stima di complessità: $T(n) = (c+d)n + c$
+
+\newpage
+\subsection{Ricerca (Search)}
+Data $k$ chiave, cerca nel sottoalbero radicato nel nodo $x$ un nodo con chiave $k$.
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+SEARCH(x,k)
+1   if (x == NULL) or (x.key == k)
+2       return x
+3   else if (k < x.key)
+4       return SEARCH(x.left,k)
+5   else
+6       return SEARCH(x.right,k)
+\end{lstlisting}
+\end{mdframed}
+La complessità, nel caso peggiore, è la ricerca che continua fino ad una foglia ed il cammino radice-foglia è quello massimo. Complessità: $O(h)$.
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+SEARCH(x,k)
+1   while (x != NULL) and (x.key != k)
+2       if (k < x.key)
+3           x = x.left
+4       else
+5           x = x.right
+6   return x
+\end{lstlisting}
+\end{mdframed}
+Se dobbiamo esaminare tutto l'albero, nel caso peggiore avremo una complessità $\Theta(n)$ sulla base di una relazione di ricorrenza $T(n) = c + T(k) + T(n-k-1)$. 
