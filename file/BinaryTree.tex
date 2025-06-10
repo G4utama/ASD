@@ -77,3 +77,32 @@ SEARCH(x,k)
 \end{lstlisting}
 \end{mdframed}
 Se dobbiamo esaminare tutto l'albero, nel caso peggiore avremo una complessità $\Theta(n)$ sulla base di una relazione di ricorrenza $T(n) = c + T(k) + T(n-k-1)$. 
+
+\subsection{Ricerca di min e max}
+Ricerca continuando ad andare verso sx oppure continuando ad andare verso dx. Per entrambi, la complessità è data dall'altezza dell'albero, in generale $O(h)$.
+\begin{multicols}{2}
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+MIN(T)
+1   x = T.root
+2   if x == NULL
+3       return NULL
+4   else
+5       while x.left != NULL
+6           x = x.left
+7       return x
+\end{lstlisting}
+\end{mdframed}
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+MAX(T)
+1   x = T.root
+2   if x == NULL
+3       return NULL
+4   else
+5       while x.right != NULL
+6           x = x.right
+7       return x
+\end{lstlisting}
+\end{mdframed}
+\end{multicols}
