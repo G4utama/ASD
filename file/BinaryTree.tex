@@ -107,7 +107,6 @@ MAX(T)
 \end{mdframed}
 \end{multicols}
 
-\newpage
 \subsection{Successore}
 Si intende il nodo elencato dopo un nodo $x$ passato come parametro in una visita simmetrica. \\~\\
 Dato $x \in ABR$:
@@ -128,6 +127,40 @@ SUCCESSOR(x)
 6           x = y
 7           y = y.p
 8       return y
+\end{lstlisting}
+\end{mdframed}
+Complessità: $O(h)$.
+
+\subsection{Inserimento}
+La funzione \verb|Insert| viene utilizzata per aggiungere un nuovo elemento in un albero di ricerca binario in una posizione appropriata. \\~\\
+La funzione \verb|Insert| deve essere progettata in modo tale da non violare la proprietà dell'albero di ricerca binario a ogni valore.
+\begin{enumerate}
+    \item Allocare la memoria per l'albero.
+    \item Impostare la parte dei dati sul valore e impostare il puntatore sx e dx dell'albero su NULL.
+    \item Se l'elemento da inserire sarà il primo elemento dell'albero, i puntatori sx e dx di questo nodo punteranno a NULL.
+    \item In caso contrario, controlla se l'elemento è inferiore all'elemento radice dell'albero. 
+    \item Se è vero, esegue ricorsivamente l'operazione con la sx della radice.
+    \item Se è falso, allora si esegue questa operazione ricorsivamente con il sottoalbero dx della radice.
+\end{enumerate}
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+INSERT(T,z)
+1   x = T.root
+2   y = NULL
+3   while x != NULL
+4       y = x
+5       if z.key < x.key
+6           x = x.left
+7       else
+8           x = x.right
+9   z.p = y
+10  if y == NULL
+11      T.root = z
+12  else
+13      if z.key < y.key
+14          y.left = z
+15      else
+16          y.right = z
 \end{lstlisting}
 \end{mdframed}
 Complessità: $O(h)$.
