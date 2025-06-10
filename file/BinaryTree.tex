@@ -106,3 +106,28 @@ MAX(T)
 \end{lstlisting}
 \end{mdframed}
 \end{multicols}
+
+\newpage
+\subsection{Successore}
+Si intende il nodo elencato dopo un nodo $x$ passato come parametro in una visita simmetrica. \\~\\
+Dato $x \in ABR$:
+\begin{itemize}
+    \item minimo tra i nodi più grandi di $x$
+    \item nodo che segue $x$ in una visita \verb|InOrder|
+    \item se $x$ ha sottoalbero dx non vuoto $\Rightarrow$ il successore è $\min(x.right)$
+    \item se $x$ non ha sottoalbero dx $\Rightarrow$ il successore è ilpiù vicino antenato di $x$ è nel sottoalbero sx
+\end{itemize}
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+SUCCESSOR(x)
+1   if x.right != NULL
+2       return MIN(x.right)
+3   else
+4       y = x.p
+5       while (y != NULL) and (x == y.right)
+6           x = y
+7           y = y.p
+8       return y
+\end{lstlisting}
+\end{mdframed}
+Complessità: $O(h)$.
