@@ -164,3 +164,72 @@ INSERT(T,z)
 \end{lstlisting}
 \end{mdframed}
 Complessità: $O(h)$.
+
+\subsection{Cancellazione}
+Distinguiamo due casi:
+\begin{itemize}
+    \item $z$ ha al più un figlio
+    \item $z$ ha due figli $\Rightarrow$ pericoloso: rischio che si copino i dati di $y$ in $z$.
+\end{itemize}
+Creiamo una funzione \verb|Transplant|, che cerca di sostituire il nodo $u$ e il suo corrispondente sottoalbero con un altro nodo $v$ e il suo sottoalbero. Suppongo che $p$ stia per il genitore di un nodo.
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+TRANSPLANT(T,u,v)
+1   if u.p == NULL
+2       T.root = v
+3   else
+4       if u == u.p.left
+5           u.p.left = v
+6       else
+7           u.p.right = v
+8   if v != NULL
+9       v.p = u.p
+\end{lstlisting}
+\end{mdframed}
+Esistono tre situazioni di eliminazione di un nodo dall'albero di ricerca binario:
+\begin{itemize}
+    \item Il nodo da eliminare è un nodo foglia: è il caso più semplice, in questo caso si sostituisce il nodo foglia con NULL e si libera semplicemente lo spazio allocato. \\~\\
+    Nell'immagine seguente, stiamo eliminando il nodo $85$, poiché si tratta di un nodo foglia; quindi, il nodo verrà sostituito con NULL e lo spazio allocato verrà liberato.
+    \begin{center}
+        \begin{tabular}{c}
+            \\ \includegraphics[width=0.8\textwidth]{image/Cancellazione1.png} \\ \\
+        \end{tabular}
+    \end{center}
+    \item Il nodo da eliminare ha un solo figlio: si sostituisce il nodo con il suo nodofiglio e si elimina il nodo figlio, che ora contiene il valore da eliminare. È sufficiente sostituirlo con NULL e liberare lo spazio allocato. \\~\\
+    Nell'immagine seguente, il nodo $12$ deve essere eliminato. Ha solo un figlio. Il nodo verrà sostituito con il suo nodo figlio e il nodo $12$ sostituito (che ora è un nodo foglia) verrà semplicemente eliminato.
+    \begin{center}
+        \begin{tabular}{c}
+            \\ \includegraphics[width=0.65\textwidth]{image/Cancellazione2.png} \\ \\
+        \end{tabular}
+    \end{center}
+    \item Il nodo che deve essere cancellato ha due nodi figli: il nodo da eliminare viene sostituito con il suo successore o predecessore in ordine ricorsivo, finché il valore del nodo (da eliminare) non viene collocato sulla foglia dell'albero. Al termine della procedura, si sostituisce il nodo con NULL e si libera lo spazio allocato. \\~\\
+    Nell'immagine seguente, il nodo da eliminare è il nodo $50$, che è il nodo radice dell'albero. L'attraversamento in ordine sparso dell'albero: $6, 25, 30, 50, 52, 60, 70, 75$. Sostituire $50$ con il suo successore in ordine $52$. Ora $50$ verrà spostato alla foglia dell'albero, che verrà semplicemente eliminata.
+    \begin{center}
+        \begin{tabular}{c}
+            \\ \includegraphics[width=0.65\textwidth]{image/Cancellazione3.png} \\ \\
+        \end{tabular}
+    \end{center}
+\end{itemize}
+
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+DELETE(T,z)
+1   if z.left == NULL
+2       TRANSPLANT(T,z,z.right)
+3   else if z.right == NULL
+4       TRANSPLANT(T,z,z.left)
+5   else
+6       y = MIN(z.right)
+7       if y.p != z
+8           TRANSPLANT(T,y,y.right)
+9           y.right = z.right
+10          y.right.p = y
+11      y.left = z.left
+12      y.left.p = y
+13      TRANSPLANT(T,z,y)
+\end{lstlisting}
+\end{mdframed}
+Complessità: $O(h)$ \\~\\
+Attenzione se dobbiamo esaminare tutto l'albero, nel caso peggiore avremo una complessità $\Theta(n)$ sulla base di una relazione di ricorrenza $T(n) = c + T(k) + T(n-k-1)$.
+
+\newpage
