@@ -24,3 +24,39 @@ Le operazioni degli RB-Tree saranno chiaramente simili a prima, in particolare:
     \item \verb|Delete| (difficile mantenere la colorazione)
 \end{itemize}
 La complessità delle operazioni è sempre data dall'altezza $h$ dell'albero, come $h = O(\log(n))$ con $h \leq 2 \log_2 (n+1)$. \\~\\
+
+\subsection{Rotation}
+Nell'operazione di \verb|Rotation|, le posizioni dei nodi di un sottoalbero vengono scambiate. \\
+Esistono 2 tipi di rotazioni:
+\begin{itemize}
+    \item Rotazione a sx: la disposizione dei nodi a dx viene trasformata in quella dei nodi a sx
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+Left(T,x)
+1   y = x.right
+2   x.right = y.left
+3   x.right.p = x
+4   Transplant(T,x,y)
+5   y.left = x
+6   x.p = y
+\end{lstlisting}
+\end{mdframed}
+    \item Rotazione a dx: la disposizione dei nodi a sx viene trasformata in quella del nodo a dx
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+Right(T,y)
+1   x = y.left
+2   y.left = x.right
+3   if x.right != T.NULL
+4       x.right.p = y
+5   x.p = y.p
+6   if y.p == T.NULL
+7       T.root = x
+8   else if y == y.p.right
+9       y.p.right = x
+10  else y.p.left = x
+11      x.right = y
+12      y.p = x
+\end{lstlisting}
+\end{mdframed}
+\end{itemize}
