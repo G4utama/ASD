@@ -144,3 +144,101 @@ I 3 casi seguenti violeranno le proprietà dell'albero rosso-nero e i passaggi s
         \item eseguite la rotazione a dx su $p[p[z]]$
     \end{enumerate}
 \end{itemize}
+
+\subsection{Cancellazione}
+Per la cancellazione \verb|RB-Delete|$(T,z)$ distinguiamo 2 casi:
+\begin{itemize}
+    \item $z$ ha un figlio
+    \item $z$ ha due figli
+\end{itemize}
+Ci comportiamo allo stesso modo della \verb|Delete|$(T,z)$ per un ABR, facendo però un ulteriore accorgimento:
+\begin{itemize}
+    \item se $z.color = RED \Rightarrow$ non ho problemi
+    \item se $z.color = BLACK \Rightarrow$ risolvo localmenteo e sposto verso l'alto il problema
+\end{itemize}
+Dunque, in seguito alla \verb|Delete|$(T,z)$, il nodo $x$ che ha preso il posto di $z$ ne "assorbirà" il colore diventando doppiamente $BLACK$. Abbiamo due casi:
+\begin{itemize}
+    \item $x$ è figlio sx (noi analizziamo solo questo, immagine)
+    \item $x$ è figlio dx
+\end{itemize}
+Abbiamo due possibilità per $w$:
+\begin{itemize}
+    \item $w.color = RED$
+    \begin{enumerate}
+        \item scambio i colori di $w$ con $x.p$
+        \item applico \verb|Left|$(T,x,p)$ 
+    \end{enumerate}
+    \item $w.color = BLACK$ \\~\\
+    Possiamo distinguere 3 sottocasi:
+    \begin{itemize}
+        \item $w.left.color = BLACK$ e $w.right.color = BLACK$
+        \begin{enumerate}
+            \item $x$ cede un suo $BLACK$ a $x.p$ e $w$ diventa per forza $RED$
+            \item risolviamo localmente e rimandiamo il problema in alto
+        \end{enumerate}
+        \item $w.right.color = BLACK$
+        \begin{enumerate}
+            \item scambio i colori di $w$ con $w.left$
+            \item applico \verb|Right|$(T,w)$
+        \end{enumerate}
+        \item $w.right.color = RED$
+        \begin{enumerate}
+            \item scambio i colori di $x.p$ con $w$ e $w.right$ diventa $BLACK$
+            \item applico \verb|Left|$(T,x,p)$
+        \end{enumerate}
+    \end{itemize}
+\end{itemize}
+Complessità $O(\log n) + \max 3$ rotazioni
+
+\newpage
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+RB-DELETE(T,z)
+1   if z.left == T.NULL && z.right == T.NULL
+2       then y = z
+3       else y = TREE-SUCCESSOR(z)
+4   if y.left != T.NULL
+5       then x = y.left
+6       else x = y.right
+7   x.p = y.p
+8   if y.p == T.NULL
+9       then T.root = x
+10      else if y == y.p.left
+11          then y.p.left = x
+12          else y.p.right = x
+13  if y != z
+14      then z.key = y.key
+15  if y.color == BLACK
+16      then RB-DELETE-FIXUP(T,x)
+17  return y
+\end{lstlisting}
+\end{mdframed}
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+RB-DELETE-FIXUP(T,x)
+1   while x != T.root && x.color == BLACK
+2       if x == x.p.left
+3           then w = x.p.right
+4               if w.color == RED
+5                   then w.color = BLACK
+6                       x.p.color = RED
+7                       Left(T,x.p)
+8               if w.left.color == BLACK && w.right.color == BLACK
+9                   then w.color = RED
+10                      x = x.p
+11                  else if w.right.color == BLACK
+12                      then w.left.color = BLACK
+13                          w.color = RED
+14                          Right(T,w)
+15                          w = x.p.right    
+16                  w.color = x.p.color
+17                  x.p.color = BLACK
+18                  w.right.color = BLACK
+19                  Left(T,x.p)
+20                  x = T.root
+21          else (same with Left and Right inverted)
+22  x.color = BLACK
+\end{lstlisting}
+\end{mdframed}
+
+\newpage
