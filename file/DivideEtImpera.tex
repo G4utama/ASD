@@ -19,3 +19,47 @@ Il Divide et Impera, possiede 2 fasi:
     \end{tabular}
 \end{center}
 L'approccio della programmazione dinamica salta completamente l'approccio top-down, normalmente usando algoritmi iterativi per evitare di dover calcolare la soluzione. La programmazione Divide et Impera usa entrambi gli approcci e normalmente in modo ricorsivo.
+
+\subsection{Memoizzazione}
+È possibile mantenere i vantaggi del Top-down e quindi anche del Divide et Impera senza incorrere nel problema del ricalcolo delle soluzioni, usando il concetto di memoizzazione. \\~\\
+
+Un algoritmo memoizzato è costituito da 2 subroutine/procedure:
+\begin{itemize}
+    \item \textbf{routine di inizializzazione:}
+    \begin{itemize}
+        \item risolve direttamente i casi base
+        \item inizializza una struttura dati "tabella" che contiene le soluzioni ai casi base ed elementi per tutte le sottoistanze da calcolare inizializzate ad un valore di default
+        \item invoca la struttura ricorsiva
+    \end{itemize}
+    \item \textbf{routine ricorsiva:}
+    \begin{itemize}
+        \item segue il codice del Divide et Impera preceduto da un test sulla tabella per verificare se la soluzione è già stata calcolata e memorizzata
+        \item se si, ritorna
+        \item altrimenti si calcola ricorsivamente e si memorizza nella struttura
+    \end{itemize}
+\end{itemize}
+
+\subsection{Ottimizzazione}
+Ora, consideriamo i problemi di ottimizzazione, per cui si cerca di trovare una cosiddetta soluzione ottima, definita come $s*$, definendo tutto come segue:
+\begin{itemize}
+    \item $I =$ insieme delle istanze
+    \item $S =$ insieme delle soluzioni
+    \item $\forall i \in I, S(i) = \{s \in S: (i,s) \in \Pi\} =$ insieme delle soluzioni ammissibili
+    \item $c: S \rightarrow \mathbb{R} =$ funzione di costo
+    \item $i \in I, s* \in S(i): c(s*) = \min / \max \{c(s): s \in S(i)\}$
+\end{itemize}
+
+Paradigma generale sullo sviluppo di un algoritmo di programmazione dinamica. Caratteristiche dei problemi:
+\begin{itemize}
+    \item struttura ricorsiva: la soluzione ottima si ottiene come funzione di soluzioni ottime di sottoistanze ("proprietà di sottostruttura ottima", quindi il fatto che ogni soluzione contenga già soluzioni precedenti)
+    \item esistenza di sottoistanze ripetute ("overlapping subproblems"), teoricamente risolvibili in maniera ottima (altrimenti, conviene applicare Divide et Impera)
+    \item spazio dei sottoproblemi piccolo: poche sottoistanze che possono contribuire a crearela soluzione al livello superiore
+\end{itemize}
+
+Ricetta:
+\begin{itemize}
+    \item caratterizza la struttura di una soluzione ottima $s*$ in funzione di soluzioni ottime $s_1*, \ldots, s_k*$ di sottoistanze di taglia inferiore
+    \item determinare una relazione di ricorrenza del tipo $c(s*) = f(c(s_1*), \ldots, c(s_k*))$
+    \item calcola $C(S*)$ utilizzando la ricorrenza ma impostando il calcolo in maniera bottom-up (iterativo) oppure memoizzando il codice Divide et Impera basato sulla definizione di $C(S*)$
+    \item (opzionale) mantieni informazioni strutturali aggiuntive che permettono di ricostruire $S*$
+\end{itemize}
