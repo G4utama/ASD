@@ -1,0 +1,164 @@
+\section{Longest Common Subsequence}
+Longest Common Subsequence (LCS) e' un problema di ottimizzazione, ovvero si cerca di trovare una soluzione ottima.
+\subsection{Problema di Ottimizzazione}
+\begin{mdframed}
+    Date 2 stringhe $X,Y$ determina $Z$ tale che:
+    \begin{itemize}
+        \item $Z$ è sottosequenza di $X$ e $Y$
+        \item $Z$ è la più lunga tra tutte le sottosequenze comuni
+    \end{itemize}
+\end{mdframed}
+Avendo complessità esponenziale, si cerca di individuare una struttura ricorsiva, cioè una proprietà di sottostruttura. La LCS deve "nascondere" al suo interno LCS di qualche stringa più piccola di $X$ e $Y$.
+\begin{equation*}
+\begin{rcases}
+    X = \langle X',a \rangle \\
+    Y = \langle Y',b \rangle
+\end{rcases} \Rightarrow Z \text{ è la stringa più lunga tra } \verb|LCS|(X',Y) \text{ e } \verb|LCS|(X,Y')
+\end{equation*}
+Spazio sottoproblemi: $S = \{ \verb|LCS|(X_i,Y_j): 0 \leq i \leq m, 0 \leq j \leq n \} \Rightarrow |S| = (m+1)(n+1)$
+
+\subsection{Proprietà di Sottostruttura}
+Ottima per il sottoproblema \verb|LCS|$(X_i,Y_j)$
+Dati:
+\begin{itemize}
+    \item $X_i = \langle x_1,x_2,\dots,x_i \rangle$
+    \item $Y_i = \langle y_1,y_2,\dots,y_j \rangle$
+\end{itemize}
+Sia $Z = \langle z_1,z_2,\dots,z_k \rangle = \verb|LCS|(X_i,Y_j)$
+\begin{itemize}
+    \item caso base: $i = j = 0 \Rightarrow Z = \varepsilon$
+    \item $i,k>0$: se $x_i = y_i$ \\
+    $\Rightarrow z_k = x_i(= y_i)$ \\
+    $\Rightarrow Z_{k-1} = \verb|LCS|(X_{i-1},Y_{j-1})$
+    \item $i,j>0$: se $x_i \not= y_j$ \\
+    $\Rightarrow Z$ è la stringa di lunghezza max tra \verb|LCS|$(X_{i-1},Y_j)$ e \verb|LCS|$(X_i,Y_{j-1})$
+\end{itemize}
+
+\subsection{Ricorrenza sui Costi}
+La scrittura della ricorrenza sui costi è il secondo passo per costruire un algoritmo di programmazione dinamica.
+\begin{equation*}
+l(i,j) = |\verb|LCS|(X_i,Y_j)| = 
+\begin{cases}
+    \text{caso base: se } i=0, j=0 \qquad\;\; 0 \\
+    \text{caso 1: se } i,j>0, x_i = x_j \qquad\; l(i-1,j-1)+1 \\
+    \text{caso 2: se } i,j>0, x_i \not= x_j \qquad \max(l(i,j-1),l(i-1,j))
+\end{cases}
+\end{equation*}
+Ci interessa calcolare $l(m,n)$
+
+\subsection{Modello di Costo: confronto tra caratteri}
+\begin{equation*}
+    T(n,m) =
+    \begin{cases}
+        \text{se } n,m=0 \qquad 0 \\
+        \text{se } n,m>0 \qquad T(n-1,m) + T(n,m-1) + 1 \\
+    \end{cases}
+\end{equation*}
+
+\newpage
+\subsection{Pseudocodice}
+\begin{mdframed}
+\begin{lstlisting}[mathescape=true]
+LCS(X,Y)
+1   m = X.length
+2   n = Y.length
+3   for i=0 to m
+4       L[i,0] = 0
+5   for j=0 to n
+6       L[0,j] = 0
+7   for i=1 to m
+8       for j=1 to n
+9           if $x_i$ = $y_j$
+10              L[i,j] = L[i-1,j-1] + 1
+11              B[i,j] = '$\nwarrow$'
+12           else if L[i-1,j] >= L[i,j-1]
+13              L[i,j] = L[i-1,j]
+14              B[i,j] = '$\uparrow$'
+15           else
+16              L[i,j] = L[i,j-1]
+17              B[i,j] = '$\leftarrow$'
+18  return (L[m,n],B)
+\end{lstlisting}
+\end{mdframed}
+\paragraph{Complessità} $T(m,n) = \Theta (m \cdot n)$	
+\begin{mdframed}
+\begin{lstlisting}[mathescape=true]
+PRINT-LCS(B,X,i,j)
+1   if i=0 or j=0
+2       return $\varepsilon$
+3   if B[i,j] = '$\nwarrow$'
+4       PRINT-LCS(B,X,i-1,j-1)
+5       print $x_i$
+6   else if B[i,j] = '$\leftarrow$'
+7       PRINT-LCS(B,X,i,j-1)
+8   else
+9       PRINT-LCS(B,X,i-1,j)
+\end{lstlisting}
+\end{mdframed}
+\paragraph{Complessità} $\Theta(m) = \Theta(|\verb|LCS||)$ \\~\\
+In particolare, per la LCS:
+\begin{itemize}
+    \item La prima riga e la prima colonna sono sempre inizializzate a $0$
+    \item Appena si ha un nuovo match, si incrementa il conteggio di $1$
+    \item Le righe successive controllano sempre la riga precedente verificando se si ha avuto un match in quella posizione, oppure verificando in diagonale a sx se si ha avuto un match
+    \begin{itemize}
+        \item se si ha avuto un match per la stessa lettera sulla stessa riga, ma in diagonale a sx si aveva 0, si ha 1 sulla riga attuale
+        \item se si ha avuto un match per la stessa lettera sulla stessa riga, ma in alto o in diagonale a sx si ha lo stesso numero, allora si incrementa perché si trova un match
+    \end{itemize}
+    \item Se si ha la freccia in alto, non si hanno avuti match
+    \item Se si ha la freccia che va a sx, si ha avuto un match sulla stessa riga in posizione precedente
+\end{itemize}
+
+\subsection{Codice Memoizzato}
+\begin{mdframed}
+\begin{lstlisting}[mathescape=true]
+INIT-LCS(X,Y)
+1   m = X.length
+2   n = Y.length
+3   if m = 0 or n = 0
+4       return 0
+5   for i=0 to m
+6       L[i,0] = 0
+7   for j=0 to n
+8       L[0,j] = 0
+9   for i=1 to m
+10       for j=1 to n
+11           L[i,j] = -1
+12  return R-LCS(X,Y,m,n)
+\end{lstlisting}
+\end{mdframed}
+\begin{mdframed}
+\begin{lstlisting}[mathescape=true]
+R-LCS(X,Y,i,j)
+1   if L[i,j] = -1
+2       if $x_i$ = $y_j$
+3           L[i,j] = R-LCS(X,Y,i-1,j-1)
+4       else if R-LCS(X,Y,i-1,j) >= R-LCS(X,Y,i,j-1)
+5           L[i,j] = L[i-1,j]
+6       else
+7           L[i,j] = L[i,j-1]
+8   return L[i,j]
+\end{lstlisting}
+\end{mdframed}
+In particolare, si ha:
+\begin{itemize}
+    \item una procedura di inizializzazione, per riempire la tabella bidimensionale di analisi messo a $0$ all'inizio per le celle $i$ e $j$, per poi porre, al secondo giro di inizializzazione $-1$.
+    \item una procedura che controlla che tutte le celle siano a $-1$ e parte dalla fine della tabella fino all'inizio iterativamente (vuol dire che quei valori devono essere ancora esaminati) e:
+    \begin{itemize}
+        \item se i valori sono uguali procedo in diagonale
+        \item se il valore della riga precedente/stessa colonna è $>=$ rispetto al valore della stessa riga e colonna precedente, si sposta verticalmenteo
+        \item altrimenti, si sposta lateralmente
+    \end{itemize}
+\end{itemize}
+\begin{equation*}
+    b(i,j) =
+    \begin{cases}
+        \nwarrow \quad \text{se } x_i = y_i \\
+        \leftarrow \quad \text{se } x_i \not= x_j \text{ e } \max = LCS(i,j-1) \\
+        \uparrow \quad\;\; \text{se } x_i \not= y_j \text{ e } \max = LCS(i-1,j)
+    \end{cases}
+\end{equation*}
+\paragraph{Complessità} $\Theta(m \cdot n)$ \\~\\
+In generale, se $Y$ è suffisso di $n \leq m$ caratteri di $X$, la complessità di \verb|R-LCS| è $T_{\verb|R-LCS|}(m,n) = n$
+
+\newpage
