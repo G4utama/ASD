@@ -54,3 +54,110 @@ Ci interessa calcolare $l(m,n)$
         \text{se } n,m>0 \qquad T(n-1,m) + T(n,m-1) + 1 \\
     \end{cases}
 \end{equation*}
+
+\subsection{Pseudocodice}
+\begin{mdframed}
+\begin{lstlisting}[mathescape=true]
+LCS(X,Y)
+1   m = X.length
+2   n = Y.length
+3   for i=0 to m
+4       L[i,0] = 0
+5   for j=0 to n
+6       L[0,j] = 0
+7   for i=1 to m
+8       for j=1 to n
+9           if $x_i$ = $y_j$
+10              L[i,j] = L[i-1,j-1] + 1
+11              B[i,j] = '$\nwarrow$'
+12           else if L[i-1,j] >= L[i,j-1]
+13              L[i,j] = L[i-1,j]
+14              B[i,j] = '$\uparrow$'
+15           else
+16              L[i,j] = L[i,j-1]
+17              B[i,j] = '$\leftarrow$'
+18  return (L[m,n],B)
+\end{lstlisting}
+\end{mdframed}
+\paragraph{Complessità} $T(m,n) = \Theta (m \cdot n)$	
+\begin{mdframed}
+\begin{lstlisting}[mathescape=true]
+PRINT-LCS(B,X,i,j)
+1   if i=0 or j=0
+2       return $\varepsilon$
+3   if B[i,j] = '$\nwarrow$'
+4       PRINT-LCS(B,X,i-1,j-1)
+5       print $x_i$
+6   else if B[i,j] = '$\leftarrow$'
+7       PRINT-LCS(B,X,i,j-1)
+8   else
+9       PRINT-LCS(B,X,i-1,j)
+\end{lstlisting}
+\end{mdframed}
+\paragraph{Complessità} $\Theta(m) = \Theta(|\verb|LCS||)$ \\~\\
+In particolare, per la LCS:
+\begin{itemize}
+    \item La prima riga e la prima colonna sono sempre inizializzate a $0$
+    \item Appena si ha un nuovo match, si incrementa il conteggio di $1$
+    \item Le righe successive controllano sempre la riga precedente verificando se si ha avuto un match in quella posizione, oppure verificando in diagonale a sx se si ha avuto un match
+    \begin{itemize}
+        \item se si ha avuto un match per la stessa lettera sulla stessa riga, ma in diagonale a sx si aveva 0, si ha 1 sulla riga attuale
+        \item se si ha avuto un match per la stessa lettera sulla stessa riga, ma in alto o in diagonale a sx si ha lo stesso numero, allora si incrementa perché si trova un match
+    \end{itemize}
+    \item Se si ha la freccia in alto, non si hanno avuti match
+    \item Se si ha la freccia che va a sx, si ha avuto un match sulla stessa riga in posizione precedente
+\end{itemize}
+
+\subsection{Codice Memoizzato}
+\begin{mdframed}
+\begin{lstlisting}[mathescape=true]
+INIT-LCS(X,Y)
+1   m = X.length
+2   n = Y.length
+3   if m = 0 or n = 0
+4       return 0
+5   for i=0 to m
+6       L[i,0] = 0
+7   for j=0 to n
+8       L[0,j] = 0
+9   for i=1 to m
+10       for j=1 to n
+11           L[i,j] = -1
+12  return R-LCS(X,Y,m,n)
+\end{lstlisting}
+\end{mdframed}
+\begin{mdframed}
+\begin{lstlisting}[mathescape=true]
+R-LCS(X,Y,i,j)
+1   if L[i,j] = -1
+2       if $x_i$ = $y_j$
+3           L[i,j] = R-LCS(X,Y,i-1,j-1)
+4       else if R-LCS(X,Y,i-1,j) >= R-LCS(X,Y,i,j-1)
+5           L[i,j] = L[i-1,j]
+6       else
+7           L[i,j] = L[i,j-1]
+8   return L[i,j]
+\end{lstlisting}
+\end{mdframed}
+In particolare, si ha:
+\begin{itemize}
+    \item una procedura di inizializzazione, per riempire la tabella bidimensionale di analisi messo a $0$ all'inizio per le celle $i$ e $j$, per poi porre, al secondo giro di inizializzazione $-1$.
+    \item una procedura che controlla che tutte le celle siano a $-1$ e parte dalla fine della tabella fino all'inizio iterativamente (vuol dire che quei valori devono essere ancora esaminati) e:
+    \begin{itemize}
+        \item se i valori sono uguali procedo in diagonale
+        \item se il valore della riga precedente/stessa colonna è $>=$ rispetto al valore della stessa riga e colonna precedente, si sposta verticalmenteo
+        \item altrimenti, si sposta lateralmente
+    \end{itemize}
+\end{itemize}
+\begin{equation*}
+    b(i,j) =
+    \begin{cases}
+        \nwarrow \quad \text{se } x_i = y_i \\
+        \leftarrow \quad \text{se } x_i \not= x_j \text{ e } \max = LCS(i,j-1) \\
+        \uparrow \quad\;\; \text{se } x_i \not= y_j \text{ e } \max = LCS(i-1,j)
+    \end{cases}
+\end{equation*}
+\paragraph{Complessità} $\Theta(m \cdot n)$ \\~\\
+In generale, se $Y$ è suffisso di $n \leq m$ caratteri di $X$, la complessità di \verb|R-LCS| è $T_{\verb|R-LCS|}(m,n) = n$
+
+\newpage
