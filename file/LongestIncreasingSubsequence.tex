@@ -1,0 +1,104 @@
+\section{Longest Increasing Subsequence}
+\begin{mdframed}
+    \textbf{Def} \quad Dato un alfabeto $\sum$ totalmente ordinato ($\forall\; a,b \in \sum \quad a<b, a=b, a>b$) e dato $X = \langle x_1,x_2,\ldots,x_n \rangle$, si dice che $Z = \langle z_1,z_2,\ldots,z_k \rangle$ è sottosequenza crescente di $X (Z = IS(X))$
+\end{mdframed}
+
+\subsection{Problema di Ottimizzazione}
+Determinare la più lunga sottosequenza crescente di $X(Z = LIS(X))$
+\begin{mdframed}
+    \textbf{Def} \quad $Z = \overline{LIS}(X_i)$ è la più lunga tra le $IS(X_i)$ con $Z = \langle z_1,z_2,\ldots,z_k \rangle = \langle x_{i_1},x_{i_2},\ldots,x_{i_k} \rangle$ con $i_k = i$
+\end{mdframed}
+Casi:
+\begin{itemize}
+    \item \textbf{fortunato:} $Z_k < X_{i+1} \Rightarrow LIS(X_{i_1}) = \langle Z^i, X_{i+1} \rangle$
+    \item \textbf{sfortunato:} $Z_k \geq X_{i+1} \Rightarrow LIS(X_{i_1}) = \langle Z^i \rangle \Rightarrow$ NO perché $X_{i+1}$ è una $LIS(X^i) \Rightarrow |LIS(X_{i+1})| = |LIS(X_i)| + 1$
+\end{itemize}
+
+\subsection{Proprietà di Sottostruttura Ottima}
+\begin{itemize}
+    \item caso base: $\overline{LIS}(X_1) = \langle x_1 \rangle (= LIS(X_1))$
+    \item caso $i>1$
+    \begin{itemize}
+        \item $\forall\; j : 1 \leq j \leq i, \quad x_j \geq x_i$ \\
+              $\overline{LIS}(X_i) = \langle x_i \rangle (= LIS(X_i))$
+        \item $\exists\; \overline{j} : 1 \leq n \overline{j} \leq i, \quad x_{\overline{j}} < x_i$ \\
+              $|\overline{LIS}(X_i)| \geq 2$ \\
+              $\overline{LIS}(X_i) = \langle z_1,z_2, \ldots, z_k \rangle = \langle Z_{k-1}, x_i \rangle$ con $Z_{k-1} : |Z_{k-1}| = \max_{1 \leq j \leq i} \{\overline{LIS}(X_j) : x_j < x_i\}$
+    \end{itemize}
+\end{itemize}
+
+\subsection{Ricorrenza sui Costi}
+Definisco;
+\begin{itemize}
+    \item $l(i) = |\overline{LIS}(X_i)|$
+    \item $l(i) = \begin{cases}
+        \text{se } i=1 \qquad 1 \\
+        \text{se } i>1 \qquad 1 + \max_{1 \leq j < i}\{l(j): x_j < x_i\}
+    \end{cases}$
+\end{itemize}
+Per costruire la sottosequenza:
+\begin{equation*}
+    \overline{LIS}(X_i) = 
+    \begin{cases}
+        \langle x_i \rangle \\
+        \langle \overline{LIS}(X_{\overline{j}}),x_i \rangle \qquad (1 \leq \overline{j} < i)
+    \end{cases}
+\end{equation*}
+Informazioni addizionali:
+\begin{itemize}
+    \item $prev(i) = \begin{cases}
+        0 \\
+        \overline{j}
+    \end{cases}$
+    \item $len = \max _{1 \leq i \leq n} \{l(i)\}$
+    \item $end = i \qquad \overline{LIS}(X_i) = LIS(X)$
+\end{itemize}
+
+\newpage
+La LIS è quindi composta da $\langle \dots, X_(prev(prev(i))), X_(prev), X_i \rangle$ \\
+Non possiamo usare un algoritmo ricorsivo, in quanto abbiamo diversi sottoproblemi ripetuti.
+Scriviamo quindi l'algoritmo bottom-up, a partire da $\overline{LIS}(X_1)$.
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+LIS(x)
+1   L[1] = 1
+2   len = 1
+3   end = 1
+4   prev[1] = 0
+5   for i = 2 to n
+6       L[i] = 1
+7       prev[i] = 0
+8       for j =1 to i-1
+9           if x_j < x_i
+10              if L[i] < 1 + L[j]
+11                  L[i] = 1 + L[j]
+12                  prev[i] = j
+13      if len < L[i]
+14          len = L[i]
+15          end = i
+16  return (len, prev, end)
+\end{lstlisting}
+\end{mdframed}
+\begin{itemize}
+    \item inizializzo tutti i valori di ricerca della sottosequenza
+    \item nel primo ciclo, inizializzo la lunghezza dell'elemento attuale e inizializzo l'elemento precedente
+    \item nel secondo ciclo, che parte dalla fine per poter ottimizzare il proprio calcolo e avere già la soluzione ottimale partendo dal primo elemento, confronto l'elemento i-esimo con l'elemento j-esimo
+    \item se fosse minore, si salva l'elemento attuale j-esimo nell'array i-esimo e si salva la lunghezza raggiunta e dove si ferma
+\end{itemize}
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+R-PRINT(X,prev,i)
+1   if prev[i] != 0
+2       R-PRINT(X,prev,prev[i])
+3   print(x_i)
+\end{lstlisting}
+\end{mdframed}
+\paragraph{Complessità} $\sum_{i=2}^n \sum_{j=1}^{i\;1}1 = \sum_{i=2}^n (i-1) = \frac{n(n-1)}{2} = \Theta(n^2)$ \\~\\
+La pratica è questa:
+\begin{itemize}
+    \item considero il mio array delle sottostringhe e cerco di trovare le sottosequenze che crescono
+    \item nell’array delle lunghezze, consideriamo che noi teniamo traccia delle sottosequenze attuali che si incrementano, considerano che teniamo solo le sottosequenze che, a parità di numero di elementi, hanno un valore nella stessa posizione minore. Non avremo mai due sottosequenze che si incrementano con lo stesso numero di elementi
+    \item noi confrontiamo gli elementi della sottostringa uno per uno; l'array delle lunghezze si aggiorna "per riga", quindi, salviamo solo le posizioni in cui la lunghezza della sottostringa sottostante aumenta, tale da poter individuare facilmente qual è la sottosequenza migliore
+\end{itemize}
+
+\newpage
