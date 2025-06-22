@@ -1,0 +1,91 @@
+\section{Shortest Palindrome Completion}
+\begin{mdframed}
+    \textbf{Def} \quad Una stringa $Z = \langle z_1,z_2,\ldots,z_n \rangle$ è palindroma se $z_{1+h} = z_{m-h} \quad (\forall\; 0 \leq h \leq m-1)$
+\end{mdframed}
+\paragraph{Problema:} Data $X = \langle x_1,x_2,\ldots,x_n \rangle$ un complemento palindromo di $X$ è una stringa $Z = CP(X) = \langle z_1,z_2,\ldots,z_m \rangle$ con $m \geq n$ tale che:
+\begin{itemize}
+    \item $Z$ e' palindroma
+    \item $X$ è sottosequenza di $Z$
+\end{itemize}
+\subsection{Proprietà di Sottostruttura Ottima}
+Casi:
+\begin{itemize}
+    \item $i=j$ \\~\\
+          $X = \langle x_i \rangle$ \\
+          $CP(X_{i \ldots j}) = X_{i \ldots j}$ \\
+          $|CP(X_{i \ldots j})| = |X_{i \ldots j}|$
+    \item $j = i+1$ \\~\\
+          $X_{i \ldots j} = \langle x_i,x_{i+1} \rangle$
+    \item $X_{i \ldots j} = \langle x_i,x_{i+1},\ldots,x_j \rangle$
+    \begin{itemize}
+        \item $x_i = x_j$ \\~\\
+              $Z = CP(X_{i \ldots j})$ \\
+              $z_1 = z_k = x_i (= x_j)$ \\
+              $Z_{2 \ldots k-1} = CP(X_{i+1 \ldots j-1})$
+        \item $x_i \not= x_j$
+        \begin{itemize}
+            \item $z_1 = z_k = x_i$ \\
+                  $Z_{2 \ldots k-1} = CP(X_{i+1 \ldots j})$
+            \item $z_1 = z_k = x_j$ \\
+                  $Z_{2 \ldots k-1} = CP(X_{i \ldots j-1})$
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\subsection{Ricorrenza sulle Lunghezze}
+Definisco:
+\begin{itemize}
+    \item $l(i,j) = |CP(X_{i \ldots j})|$
+    \item $l(i,j) = \begin{cases}
+        \text{se } i = j \qquad\qquad\qquad\;\;\;\;\; 1 \\
+        \text{se } j = i+1, x_i = x_j \qquad 2\\
+        \text{se } j = i+1, x_i \not= x_j \qquad 3\\
+        \text{se } j > i+1, x_i = x_j \qquad 2 + l(i+1,j-1)\\
+        \text{se } j > i+1, x_i \not= x_j \qquad 2 + \min\{l(i+1,j),l(i,j-1)\}
+    \end{cases}$
+\end{itemize}
+
+\newpage
+\subsection{Pseudocodice}
+\begin{mdframed}
+\begin{lstlisting}[language=C]
+SPC(X)
+1   n = X.length
+2   for i=1 to n-1
+3       L[i,j] = 1
+4       if x_i = x_{i+1}
+5           L[i,i+1] = 2
+6       else
+7           L[i,i+1] = 3
+8   L[n,n] = 1
+9   for l=3 to n
+10      for i=1 to n-l+1
+11          j = i+l-1
+12          if x_i = x_j
+13              L[i,j] = 2 + L[i+1,j-1]
+14          else
+15              L[i,j] = 2 + min(L[i+1,j],L[i,j-1])
+16  return L[1,n]
+\end{lstlisting}
+\end{mdframed}
+Per l’algoritmo:
+\begin{itemize}
+    \item salvo la lunghezza iniziale della parola
+    \item inizializzo l'array delle lunghezze e copro i casi base (stringhe con 2 caratteri uguali a stringhe consecutive (metto 2) o stringhe con 2 caratteri uguali non consecutive (metto 3))
+    \item procedo con una scansione diagonale (con $l$ che parte da 3 avendo esaminato i casi base palindromo e assicurandomi di non avere stringa palindroma di 1-2 caratteri)
+    \item l'altro ciclo esclude tutte le stringhe già controllate (lunghezza 1/2)
+    \item se le stringhe sono uguali, continuo a cercare in diagonale
+    \item altrimenti, scelgo la stringa di lunghezza minima (perché cerco di ottimizzare il problema e quindi scelgo la stringa più corta da controllare) a sinistra e sotto
+\end{itemize}
+\paragraph{Complessità} $\Theta(n^2)$
+\begin{equation*}
+    \sum_{i=1}^{n-1} + \sum_{l=3}^{n} \sum_{i=1}^{n-l+1} =
+    \sum_{i=1}^{n-1} + \sum_{l=3}^{n}(n-l+1) =
+    \sum_{i=1}^{n-1} + \sum_{i=2}^{n-1}(n-i) =
+    \sum_{i=1}^{n-1}(n-i) =
+    \sum_{j=1}^{n-1}j =
+    \frac{n(n-1)}{2} =
+    \Theta(n^2)
+\end{equation*}
+
+\newpage
