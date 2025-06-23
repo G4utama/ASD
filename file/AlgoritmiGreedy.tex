@@ -1,0 +1,34 @@
+\section{Algoritmi Greedy}
+Un algoritmo Greedy è un approccio per risolvere un problema selezionando la migliore opzione disponibile al momento. Non si preoccupa di sapere se il risultato migliore attuale porterà al risultato ottimale complessivo. L'algoritmo non inverte mai la decisione precedente, anche se la scelta è sbagliata. Funziona con un approccio Top-Down. \\~\\
+In particolare:
+\begin{itemize}
+    \item sono semplici, costruiscono l’ottimo per scelte successive
+    \item possiedono la proprietà di sottostruttura ottima per la decisione che prendono
+    \item risolvono un solo sottoproblema
+    \item hanno un campo di applicazione limitato
+\end{itemize}
+
+\subsection{Problema di Ottimizzazione}
+Determinare un sottoinsieme di massima cardinalità di attività mutuamente compatibili (cioè compatibili a coppie).
+
+\subsection{Proprietà di Sottostruttura Ottima}
+Sia $A_{ij}^*$ un sottoinsieme di attività compatibili di $S_{ij}$ di cardinalità massima
+\begin{itemize}
+    \item caso base: $S_{ij} = \varnothing \Rightarrow A_{ij}^* = \varnothing$
+    \item caso generale: $S_{ij} \not= \varnothing$
+    \begin{itemize}
+        \item $A_{ij}^* = \varnothing$
+        \item se $a_k \in A_{ij}^*$ allora $A_{ij}^* = A_{ik}^* \cup A_{kj}^*$ dove $A_{ik}^*$ e $A_{kj}^*$ sono soluzioni ottime per $S_{ik}$ e $S_{kj}$
+    \end{itemize}  
+\end{itemize}
+
+\subsection{Ricorrenza dei Costi}
+Definisco:
+\begin{itemize}
+    \item $c(i,j) = |A_{ij}^*|$
+    \item $c(i,j) = \begin{cases}
+        S_{ij} = \varnothing \qquad 0 \\
+        S_{ij} \not= \varnothing \qquad 1 + \max_{a_k \in S_{ij}} \{c(i,k) + c(k,j)\}
+    \end{cases}$
+\end{itemize}
+\paragraph{Complessità} $\Theta(n^3)$
