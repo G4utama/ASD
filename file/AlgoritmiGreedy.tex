@@ -1,0 +1,114 @@
+\section{Algoritmi Greedy}
+Un algoritmo Greedy è un approccio per risolvere un problema selezionando la migliore opzione disponibile al momento. Non si preoccupa di sapere se il risultato migliore attuale porterà al risultato ottimale complessivo. L'algoritmo non inverte mai la decisione precedente, anche se la scelta è sbagliata. Funziona con un approccio Top-Down. \\~\\
+In particolare:
+\begin{itemize}
+    \item sono semplici, costruiscono l’ottimo per scelte successive
+    \item possiedono la proprietà di sottostruttura ottima per la decisione che prendono
+    \item risolvono un solo sottoproblema
+    \item hanno un campo di applicazione limitato
+\end{itemize}
+
+\subsection{Problema di Ottimizzazione}
+Determinare un sottoinsieme di massima cardinalità di attività mutuamente compatibili (cioè compatibili a coppie).
+
+\subsection{Proprietà di Sottostruttura Ottima}
+Sia $A_{ij}^*$ un sottoinsieme di attività compatibili di $S_{ij}$ di cardinalità massima
+\begin{itemize}
+    \item caso base: $S_{ij} = \varnothing \Rightarrow A_{ij}^* = \varnothing$
+    \item caso generale: $S_{ij} \not= \varnothing$
+    \begin{itemize}
+        \item $A_{ij}^* = \varnothing$
+        \item se $a_k \in A_{ij}^*$ allora $A_{ij}^* = A_{ik}^* \cup A_{kj}^*$ dove $A_{ik}^*$ e $A_{kj}^*$ sono soluzioni ottime per $S_{ik}$ e $S_{kj}$
+    \end{itemize}  
+\end{itemize}
+
+\subsection{Ricorrenza dei Costi}
+Definisco:
+\begin{itemize}
+    \item $c(i,j) = |A_{ij}^*|$
+    \item $c(i,j) = \begin{cases}
+        S_{ij} = \varnothing \qquad 0 \\
+        S_{ij} \not= \varnothing \qquad 1 + \max_{a_k \in S_{ij}} \{c(i,k) + c(k,j)\}
+    \end{cases}$
+\end{itemize}
+\paragraph{Complessità} $\Theta(n^3)$
+
+\subsection{Aspetto Greedy}
+Aspetto greedy del problema: $\exists$ attività di $S_{ij}$ che sta sicuramente in $A_{ij}^*$.
+Qual è questa attività? \\~\\
+Sia $a_m$ l'attività tale che
+\begin{equation*}
+    f_m = \min\{f_k: a_k \in S_{ij}\}
+\end{equation*}
+Se $S_{ij} \not= \varnothing$ allora
+\begin{itemize}
+    \item $\exists A_{ij}^*$ soluzione ottima, tale che $a_m \in A_{ij}^*$
+    \item il sottoproblema $S_{im} = \varnothing$
+\end{itemize}
+\paragraph{Strategia}
+\begin{itemize}
+    \item scegliere $a_m$
+    \item risolvere $S_{mj}$ \quad (perché $A_{ij}^* = \{a_m\} \cup A_{mj}^*$)
+\end{itemize}
+Per risolvere $S = S_{(0 \; n+1)}$ viene invocata la soluzione solo di problemi del tipo $S_{(m \; n + 1)}$ spazio dei sottoproblemi è ridotto da quadratico a lineare: al più $n+1$ sottoproblemi, cioè quelli che vanno da $m=0$ ad $m = n+1$.
+\begin{mdframed}
+\begin{lstlisting}[mathescape=true]
+OPT($S_{(i \; n+1)}$)
+1   if $S_{(i \; n+1)}$ = $\varnothing$
+2       $a_m: f_m = \min\{f_k: a_k \in S_{(i \; n+1)}\}$
+3       return $a_m \cup OPT(S_{(m \; n+1)})$
+4   else
+5       return $\varnothing$ 
+\end{lstlisting}
+\end{mdframed}
+L'implementazione dettagliata è la seguente:
+\begin{mdframed}
+\begin{lstlisting}[mathescape=true]
+REC-SEL(S,f,i)
+1   n = S.lenght
+2   m = i+1
+3   while (m <= n) and ($s_m$ < $f_i$)
+4       m = m+1
+5   if m<n
+6       return $\{a_m\} \;\cup$ REC-SEL(S,f,m)
+7   else
+8       return $\varnothing$
+\end{lstlisting}
+\end{mdframed}
+Versione iterativa:
+\begin{mdframed}
+\begin{lstlisting}[mathescape=true]
+GREEDY-SEL(S,f)
+1   n = S.lenght
+2   A = $\{a_1\}$
+3   last = 1
+4   for m = 2 to n
+5       if $s_m$ < $f_{last}$
+6           A = A $\cup$ $\{a_m\}$
+7           last = m
+8   return A
+\end{lstlisting}
+\end{mdframed}
+Spiegazione algoritmo greedy attività:
+\begin{enumerate}
+    \item ordinare le attività in ordine crescente in base al tempo di completamento
+    \item selezionare la prima attività dall'array ordinato $A[]$ e scrivere l'indice per l'ultima attività selezionabile
+    \item se l'ora di inizio dell'attività attualmente selezionata è maggiore o uguale all'ora di fine dell'attività precedentemente selezionata, aggiungerla all'array $A[]$ e salvare la posizione dell'attività selezionata
+    \item procedere iterativamente e ritornare $A[]$
+\end{enumerate}
+
+\subsection{Paradigma Generale}
+Si basa su 2 proprietà:
+\begin{itemize}
+    \item \textbf{Proprietà di scelta greedy:} la soluzione ottima può essere costruita componendo scelte "ardite" (quella che può risolvere il sottoproblema, idealmente) e si dimostra col CUT\&PASTE
+    \item \textbf{Proprietà di sottostruttura ottima con spazio dei sottoproblemi lineare:} significa dimostrare che la soluzione ottima, che contiene la scelta greedy, contiene una soluzione all'unicosottoproblema da risolvere dopo aver fatto la scelta greedy
+\end{itemize}
+Scelte greedy alternative:
+\begin{itemize}
+    \item scegli l'attività di durata inferiore $\rightarrow$ non è ottima
+    \item scegli l'attività con il minor numero di sovrapposizioni $\rightarrow$ non è ottima
+    \item scegli l'attività che inizia per prima $\rightarrow$ non è ottima
+    \item scegli l'attività che inizia per ultima $\rightarrow$ è ottima
+\end{itemize}
+
+\newpage
